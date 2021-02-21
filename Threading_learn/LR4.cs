@@ -2,30 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Threading_learn
 {
     class LR4 : LR2, ILRs
     {
+        Func<int> someFunc;
         public LR4(int rows, int columns):base(rows, columns)
         {
-            calc = CalcMaxMin;
+            someFunc = CalcMaxMin;
         }
         public new void DoAction()
         {
             PrintMatrix();
-            //Why it's not work?...
-            calc.BeginInvoke(ar =>
+           someFunc.BeginInvoke(ar => 
             {
-                
-                int a = calc.EndInvoke(ar);
-                log(Environment.NewLine + "Result -- " + calc.EndInvoke(ar).ToString() + Environment.NewLine);
-            },
-                 calc);
-
-
+                log(someFunc.EndInvoke(ar).ToString());
+            }, null);
+            log(Environment.NewLine);
+            Thread.Sleep(500); // Без паузы фунция завершается до окончания вычислений
         }
+
         /*
         Метод возвращает разницу
         максимального и
